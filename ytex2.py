@@ -9,22 +9,16 @@ from textblob import TextBlob
 import re
 
 
-# ----------------------------
-# CONFIGURATION
-# ----------------------------
+
 API_KEY = 'AIzaSyBME_qa8VrwNx_sWxbsHd-TpCbiKl6Oz74'
 CHANNEL_ID = 'UCfM3zsQsOnfWNUppiycmBuw'
 MAX_RESULTS = 20  # Number of videos to scrape
 
-# ----------------------------
-# API Setup
-# ----------------------------
+
 youtube = build('youtube', 'v3', developerKey=API_KEY)
 
 
-# ----------------------------
-# Get video IDs from channel
-# ----------------------------
+
 def get_video_ids(channel_id, max_results=MAX_RESULTS):
     video_ids = []
     request = youtube.search().list(
@@ -41,9 +35,7 @@ def get_video_ids(channel_id, max_results=MAX_RESULTS):
     return video_ids
 
 
-# ----------------------------
-# Get video data
-# ----------------------------
+
 def get_video_details(video_ids):
     videos = []
     for video_id in video_ids:
@@ -67,9 +59,7 @@ def get_video_details(video_ids):
     return pd.DataFrame(videos)
 
 
-# ----------------------------
-# Clean & preprocess text
-# ----------------------------
+
 def clean_text(text):
     text = re.sub(r"http\S+", "", text)  # Remove URLs
     text = re.sub(r"[^\w\s]", "", text)  # Remove punctuation
@@ -77,18 +67,14 @@ def clean_text(text):
     return text
 
 
-# ----------------------------
-# Sentiment analysis
-# ----------------------------
+
 def sentiment_score(text):
     if text:
         return TextBlob(text).sentiment.polarity
     return 0
 
 
-# ----------------------------
-# Main analysis pipeline
-# ----------------------------
+
 def analyze_channel(channel_id):
     print("Fetching video IDs...")
     video_ids = get_video_ids(channel_id)
@@ -139,3 +125,4 @@ def save_data(df, filename='youtube_data'):
 if __name__ == '__main__':
     final_df = analyze_channel(CHANNEL_ID)
     save_data(final_df, 'youtube_analysis')
+
